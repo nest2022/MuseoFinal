@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Mi Museo Final</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.js"></script>
+    <script src="StereoEffect.js"></script>
+    <script src="DeviceOrientationControls.js"></script>
+    <script src="inflate.min.js"></script>
+    <script>
+      var scene = new THREE.Scene();
+
+      //CAMARA
+      const camera = new THREE.PerspectiveCamera(
+        80,
+        window.innerWidth / window.innerHeight,
+        0.5,
+        1000
+      );
+
+      var controls = new THREE.DeviceOrientationControls(camera);
+      let isLeftMouseDown = false;
+      let isRightMouseDown = false;
+      const maxCameraZ = 45;
+      const minCameraZ = 20;
+      document.addEventListener("mousedown", function (event) {
+        if (event.button === 0) {
+          isLeftMouseDown = true;
+        } else if (event.button === 2) {
+          isRightMouseDown = true;
+        }
+      });
+      document.addEventListener("mouseup", function (event) {
+        if (event.button === 0) {
+          isLeftMouseDown = false;
+        } else if (event.button === 2) {
+          isRightMouseDown = false;
+        }
+      });
+
+      const pointer = new THREE.Vector2(0, 0);
+      var t = 0;
+
+      //RENDER
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.shadowMap.enabled = true;
+      document.body.appendChild(renderer.domElement);
+
+      //CONTROLES ORBIT/DEVICE/STEREO
+
+      const device = new THREE.DeviceOrientationControls(camera);
+      const stereo = new THREE.StereoEffect(renderer);
+
+      //FONDO
+      const reflectionCube = new THREE.CubeTextureLoader().load([
+        "a.jpg",
+        "a.jpg",
+        "a.jpg",
+        "a.jpg",
+        "a.jpg",
+        "a.jpg",
+      ]);
+      reflectionCube.encoding = THREE.sRGBEncoding;
+      scene.background = reflectionCube;
+      var effect = new THREE.StereoEffect(renderer);
+      effect.setSize(window.innerWidth, window.innerHeight);
+
+      //PISO
+      var geometry = new THREE.BoxGeometry(700, 0.5, 700);
+      var loader = new THREE.TextureLoader();
+      var texture = loader.load("piso.png");
+      var material = new THREE.MeshPhongMaterial({
+        color: 0x1f1f1f,
+        map: texture,
+        shininess: 25,
+        reflectivity: 0.07,
+      });
+
+      //LLAMAR PISO1
+      var cubep = new THREE.Mesh(geometry, material);
+      scene.add(cubep);
+      cubep.castShadow = true;
+      cubep.position.y = -150;
+
+      //PARED1
+      var geometry5 = new THREE.BoxGeometry(700, 0.5, 400);
+      var loader = new THREE.TextureLoader();
+      var texture5 = loader.load("pared1.png");
+      var material5 = new THREE.MeshPhongMaterial({
+        color: 0x414141,
+        map: texture5,
+        emissive: 0x00ff00,
+        emissiveIntensity: 0,
+        reflectivity: 0.8,
+      });
+
+      //LLAMAR PARED1
+      var cube5 = new THREE.Mesh(geometry5, material5);
+      cube5.position.x = -350;
+      cube5.position.z = 0;
+      cube5.position.y = 11.5;
+      cube5.rotation.z = 1.57;
+      cube5.rotation.x = -1.57;
+      scene.add(cube5);
+      cube5.castShadow = true;
+
+      //PARED2
+      var geometry6 = new THREE.BoxGeometry(700, 0.5, 400);
+      var loader = new THREE.TextureLoader();
+      var texture6 = loader.load("pared2.png");
+      var material6 = new THREE.MeshPhongMaterial({
+        color: 0x414141,
+        map: texture6,
+        shininess: 10,
+        reflectivity: 0.8,
+      });
+
+      //LLAMAR PARED2
+      var cube6 = new THREE.Mesh(geometry6, material6);
+      cube6.position.x = 350;
+      cube6.position.z = 0;
+      cube6.position.y = 11.5;
+      cube6.rotation.z = 4.71;
+      cube6.rotation.x = -1.57;
+      scene.add(cube6);
+      cube6.castShadow = true;
+
+      //PARED3
+      var geometry7 = new THREE.BoxGeometry(700, 0.5, 400);
+      var loader = new THREE.TextureLoader();
+      var texture7 = loader.load("pared3.png");
+      var material7 = new THREE.MeshPhongMaterial({
+        color: 0x414141,
+        map: texture7,
+        shininess: 10,
+        reflectivity: 0.8,
+      });
+
+      //LLAMAR PARED3
+      var cube7 = new THREE.Mesh(geometry7, material7);
+      cube7.position.x = 0;
+      cube7.position.z = 350;
+      cube7.position.y = 11.5;
+      cube7.rotation.z = -3.14;
+      cube7.rotation.x = -1.572;
+      scene.add(cube7);
+      cube7.castShadow = true;
+
+      //PARED4
+      var geometry8 = new THREE.BoxGeometry(700, 0.5, 400);
+      var loader = new THREE.TextureLoader();
+      var texture8 = loader.load("pared4.png");
+      var material8 = new THREE.MeshPhongMaterial({
+        color: 0x414141,
+        map: texture8,
+        shininess: 100,
+        reflectivity: 0.8,
+      });
+
+      //LLAMAR PARED4
+      var cube8 = new THREE.Mesh(geometry8, material8);
+      cube8.position.x = 0;
+      cube8.position.z = -350;
+      cube8.position.y = 11.5;
+      cube8.rotation.z = 0;
+      cube8.rotation.x = -1.56;
+      scene.add(cube8);
+      cube8.castShadow = true;
+
+      //TECHO
+      var geometry9 = new THREE.BoxGeometry(700, 0.5, 700);
+      var loader = new THREE.TextureLoader();
+      var texture9 = loader.load("techo.png");
+      var material9 = new THREE.MeshPhongMaterial({
+        color: 0x1f1f1f,
+        map: texture9,
+        shininess: 100,
+        reflectivity: 0,
+      });
+
+      const geometrype = new THREE.PlaneGeometry(180, 210, 50);
+      const texturepe = new THREE.TextureLoader().load("alfombra.png");
+      const materialpe = new THREE.MeshBasicMaterial({ map: texturepe });
+      const planepe = new THREE.Mesh(geometrype, materialpe);
+      scene.add(planepe);
+
+      planepe.position.y = -145;
+      planepe.rotation.x = (-90 * Math.PI) / 180;
+      planepe.position.x = -20;
+      planepe.position.z = -20;
+
+      const geometrype1 = new THREE.PlaneGeometry(110, 110);
+      const texturepe1 = new THREE.TextureLoader().load("mona.png");
+      const materialpe1 = new THREE.MeshBasicMaterial({ map: texturepe1 });
+      const planepe1 = new THREE.Mesh(geometrype1, materialpe1);
+      scene.add(planepe1);
+      planepe1.position.y = -60;
+      planepe1.rotation.y = (90 * Math.PI) / 180;
+      planepe1.rotation.x = (90 * Math.PI) / 180;
+      planepe1.rotation.z = (-90 * Math.PI) / 180;
+      planepe1.position.x = -110;
+      planepe1.position.z = 190;
+
+      const geometrype2 = new THREE.PlaneGeometry(110, 110);
+      const texturepe2 = new THREE.TextureLoader().load("obra.png");
+      const materialpe2 = new THREE.MeshBasicMaterial({ map: texturepe2 });
+      const planepe2 = new THREE.Mesh(geometrype2, materialpe2);
+      scene.add(planepe2);
+      planepe2.position.y = -60;
+      planepe2.rotation.y = (200 * Math.PI) / 360;
+      planepe2.position.x = -180;
+      planepe2.position.z = 30;
+
+      const geometrype3 = new THREE.PlaneGeometry(160, 110);
+      const texturepe3 = new THREE.TextureLoader().load("ultima.png");
+      const materialpe3 = new THREE.MeshBasicMaterial({ map: texturepe3 });
+      const planepe3 = new THREE.Mesh(geometrype3, materialpe3);
+      scene.add(planepe3);
+      planepe3.position.y = -60;
+      planepe3.rotation.y = (360 * Math.PI) / 180;
+      planepe3.position.x = 90;
+      planepe3.position.z = -190;
+
+      const geometrype4 = new THREE.PlaneGeometry(110, 110);
+      const texturepe4 = new THREE.TextureLoader().load("grito.png");
+      const materialpe4 = new THREE.MeshBasicMaterial({ map: texturepe4 });
+      const planepe4 = new THREE.Mesh(geometrype4, materialpe4);
+      scene.add(planepe4);
+      planepe4.position.y = -60;
+      planepe4.rotation.y = (50 * Math.PI) / 180;
+      planepe4.position.x = -120;
+      planepe4.position.z = -160;
+
+      //LLAMAR TECHO
+      var cube9 = new THREE.Mesh(geometry9, material9);
+      cube9.position.x = 0;
+      cube9.position.z = 0;
+      cube9.position.y = 190;
+      scene.add(cube9);
+      cube9.castShadow = true;
+
+      var materialT2 = new THREE.MeshPhongMaterial({
+        color: 0xff0000,
+        shininess: 100,
+        emissive: 0x00ff00,
+        emissiveIntensity: 0,
+        reflectivity: 0.8,
+      });
+
+      const recip_bafle = new THREE.Object3D();
+      scene.add(recip_bafle);
+
+      //ambient light //solo poner intensidad y agregarla
+      const light = new THREE.AmbientLight(0xffffff, 5); // soft white light
+      scene.add(light);
+
+      //spotlight1
+
+      //Crear Luz
+      const spotLight = new THREE.SpotLight(0xffffff, 2.5);
+
+      //Setear valores
+      spotLight.angle = 55 * (180 / Math.PI);
+      spotLight.distance = 100;
+      spotLight.penumbra = 0;
+      scene.add(spotLight);
+
+      //Crear objeto
+      const caja = new THREE.Object3D();
+      scene.add(caja);
+
+      //Añadirle la Luz al objeto
+      caja.add(spotLight);
+      caja.position.set(0, 500, 0);
+      const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+      scene.add(spotLightHelper);
+
+      //pointlight2
+      const lightP2 = new THREE.PointLight(0xffffff, 1);
+      lightP2.position.set(0, 22, 0);
+      lightP2.castShadow = true;
+      scene.add(lightP2);
+      const pointLightHelper2 = new THREE.PointLightHelper(lightP2, 1);
+      scene.add(pointLightHelper2);
+
+      //AUDIO
+      const listener = new THREE.AudioListener();
+      camera.add(listener);
+
+      // create the PositionalAudio object (passing in the listener)
+      const sound = new THREE.PositionalAudio(listener);
+
+      // load a sound and set it as the PositionalAudio object's buffer
+      const audioLoader = new THREE.AudioLoader();
+      audioLoader.load("FurEliseBeethoven.mp3", function (buffer) {
+        sound.setBuffer(buffer);
+        sound.setRefDistance(20);
+        sound.setVolume(10);
+        sound.play();
+      });
+
+      recip_bafle.add(sound);
+
+      camera.position.z = 60;
+      camera.position.x = 120;
+      camera.position.y = -110;
+
+      const geometryte = new THREE.BoxGeometry(40, 40, 40);
+      const materialte = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const cubete = new THREE.Mesh(geometryte, materialte);
+      cubete.position.y = -50;
+      cubete.position.z = 200;
+      cubete.position.x = 260;
+
+      cubete.name = "teleport";
+      scene.add(cubete);
+
+      var t = 0;
+      var animate = function () {
+        requestAnimationFrame(animate);
+        raycaster.setFromCamera(pointer, camera);
+        const intersect = raycaster.intersectObjects(scene.children);
+        if (intersect.length > 0) {
+          if (intersect[0].object.name == "teleport") {
+            t += 0.9;
+            cubete.material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+
+            if (t > 10) {
+              camera.position.z = cube.position.z + 600;
+              camera.position.x = cube.position.x + 500;
+              camera.position.y = cube.position.y + 200;
+            }
+          } else {
+            t = 0;
+          }
+        } else {
+          cubete.material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        }
+
+        effect.render(scene, camera);
+      };
+      camera.position.z = 35;
+      const raycaster = new THREE.Raycaster();
+      function onMouseMove() {
+        const cameraDirection = new THREE.Vector3();
+        camera.getWorldDirection(cameraDirection);
+        raycaster.set(camera.position, cameraDirection);
+        const intersectsplanepe1 = raycaster.intersectObject(planepe1);
+        if (intersectsplanepe1.length > 0) {
+          planepe1.position.y = 2.2;
+          planepe1.scale.z = 1.5;
+        }
+        const intersectsplanepe2 = raycaster.intersectObject(planepe2);
+        if (intersectsplanepe2.length > 0) {
+          planepe2.scale.z = 1.5;
+          planepe2.scale.y = 1.5;
+        }
+        const intersectsplanepe3 = raycaster.intersectObject(planepe3);
+        if (intersectsplanepe3.length > 0) {
+          planepe3.scale.z = 1.5;
+          planepe3.scale.y = 1.5;
+        }
+        const intersectsplanepe4 = raycaster.intersectObject(planepe4);
+        if (intersectsplanepe4.length > 0) {
+          planepe4.scale.z = 1.5;
+          planepe4.scale.y = 1.5;
+        }
+      }
+      document.addEventListener("mousemove", onMouseMove);
+      function animate() {
+        requestAnimationFrame(animate);
+        if (isLeftMouseDown) {
+          camera.position.z += 0.5;
+        }
+        if (isRightMouseDown) {
+          camera.position.z -= 0.5;
+        }
+        if (camera.position.z > maxCameraZ) {
+          camera.position.z = maxCameraZ;
+        }
+        if (camera.position.z < minCameraZ) {
+          camera.position.z = minCameraZ;
+        }
+        controls.update();
+        effect.render(scene, camera);
+      }
+      animate();
+
+      animate();
+    </script>
+  </body>
+</html>
